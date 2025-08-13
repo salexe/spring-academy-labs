@@ -1,9 +1,13 @@
 package rewards.internal;
 
+import common.money.MonetaryAmount;
+import rewards.AccountContribution;
 import rewards.Dining;
 import rewards.RewardConfirmation;
 import rewards.RewardNetwork;
+import rewards.internal.account.Account;
 import rewards.internal.account.AccountRepository;
+import rewards.internal.restaurant.Restaurant;
 import rewards.internal.restaurant.RestaurantRepository;
 import rewards.internal.reward.RewardRepository;
 
@@ -21,12 +25,12 @@ import rewards.internal.reward.RewardRepository;
  * - Writing test code using stub implementations of dependencies
  * - Writing both target code and test code without using Spring framework
  *
- * TODO-01: Review the Rewards Application document (Refer to the lab document)
- * TODO-02: Review project dependencies (Refer to the lab document)
- * TODO-03: Review Rewards Commons project (Refer to the lab document)
- * TODO-04: Review RewardNetwork interface and RewardNetworkImpl class below
- * TODO-05: Review the RewardNetworkImpl configuration logic (Refer to the lab document)
- * TODO-06: Review sequence diagram (Refer to the lab document)
+ * dTODO-01: Review the Rewards Application document (Refer to the lab document)
+ * dTODO-02: Review project dependencies (Refer to the lab document)
+ * dTODO-03: Review Rewards Commons project (Refer to the lab document)
+ * dTODO-04: Review RewardNetwork interface and RewardNetworkImpl class below
+ * dTODO-05: Review the RewardNetworkImpl configuration logic (Refer to the lab document)
+ * dTODO-06: Review sequence diagram (Refer to the lab document)
  */
 public class RewardNetworkImpl implements RewardNetwork {
 
@@ -52,7 +56,12 @@ public class RewardNetworkImpl implements RewardNetwork {
 	public RewardConfirmation rewardAccountFor(Dining dining) {
 		// TODO-07: Write code here for rewarding an account according to
 		//          the sequence diagram in the lab document
-		// TODO-08: Return the corresponding reward confirmation
-		return null;
+		final Account account = accountRepository.findByCreditCard(dining.getCreditCardNumber());
+		final Restaurant restaurant = restaurantRepository.findByMerchantNumber(dining.getMerchantNumber());
+		final MonetaryAmount benefitAmount = restaurant.calculateBenefitFor(account, dining);
+		final AccountContribution contribution = account.makeContribution(benefitAmount);
+		accountRepository.updateBeneficiaries(account);
+		return rewardRepository.confirmReward(contribution, dining);
+		// dTODO-08: Return the corresponding reward confirmation
 	}
 }
