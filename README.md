@@ -1,4 +1,7 @@
-# Core Spring and Spring Boot Lab Projects
+### Spring Course: [Spring Framework Essentials](https://spring.academy/courses/spring-framework-essentials)
+
+
+#### Core Spring and Spring Boot Lab Projects
 
 Labs for the Core Spring and Spring Boot courses
 
