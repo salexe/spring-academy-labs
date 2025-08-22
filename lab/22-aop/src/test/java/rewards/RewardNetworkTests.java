@@ -1,17 +1,18 @@
 package rewards;
 
-import common.money.MonetaryAmount;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import common.money.MonetaryAmount;
 import rewards.CaptureSystemOutput.OutputCapture;
 import rewards.internal.aspects.LoggingAspect;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * A system test that verifies the components of the RewardNetwork application
@@ -59,12 +60,12 @@ public class RewardNetworkTests {
 		assertEquals(MonetaryAmount.valueOf("4.00"), contribution.getDistribution("Annabelle").getAmount());
 		assertEquals(MonetaryAmount.valueOf("4.00"), contribution.getDistribution("Corgan").getAmount());
 		
-		// TODO-06: Run this test. It should pass AND you should see TWO lines of
+		// dTODO-06: Run this test. It should pass AND you should see TWO lines of
 		// log output from the LoggingAspect on the console
-		int expectedMatches = 2;
+		int expectedMatches = 4;
 		checkConsoleOutput(capture, expectedMatches);
 		
-		// TODO-09: Save all your work, and change the expected matches value above from 2 to 4.
+		// dTODO-09: Save all your work, and change the expected matches value above from 2 to 4.
 		// Rerun the RewardNetworkTests.  It should pass, and you should now see FOUR lines of
 		// console output from the LoggingAspect.
 	}

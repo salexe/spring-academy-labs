@@ -1,19 +1,20 @@
 package rewards;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import rewards.CaptureSystemOutput.OutputCapture;
 import rewards.internal.account.AccountRepository;
 import rewards.internal.aspects.DBExceptionHandlingAspect;
 import rewards.internal.exception.RewardDataAccessException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { DbExceptionTestConfig.class })
@@ -35,7 +36,7 @@ public class DBExceptionHandlingAspectTests {
             repository.findByCreditCard("1234123412341234");
         });
 
-        // TODO-12: (Optional) Validate our AOP is working.
+        // dTODO-12: (Optional) Validate our AOP is working.
         //
         // - An error message should now be logged to the console as a warning
         // - Save all your work and run this test - it should pass with a warning
