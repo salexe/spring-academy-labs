@@ -3,8 +3,6 @@ package rewards.internal.account;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -29,12 +27,9 @@ import common.money.Percentage;
 //   object using the given DataSource object.
 public class JdbcAccountRepository implements AccountRepository {
 
-	private DataSource dataSource;
-	
 	private JdbcTemplate jdbcTemplate;
 
-	public JdbcAccountRepository(DataSource dataSource, JdbcTemplate jdbcTemplate) {
-		this.dataSource = dataSource;
+	public JdbcAccountRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 

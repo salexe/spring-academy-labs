@@ -37,19 +37,19 @@ public class RewardsConfig {
 	
 	@Bean
 	public AccountRepository accountRepository(){
-		JdbcAccountRepository repository = new JdbcAccountRepository(dataSource, jdbcTemplate());
+		JdbcAccountRepository repository = new JdbcAccountRepository(jdbcTemplate());
 		return repository;
 	}
 	
 	@Bean
 	public RestaurantRepository restaurantRepository(){
-		JdbcRestaurantRepository repository = new JdbcRestaurantRepository(dataSource, jdbcTemplate());
+		JdbcRestaurantRepository repository = new JdbcRestaurantRepository(jdbcTemplate());
 		return repository;
 	}
 	
 	@Bean
 	public RewardRepository rewardRepository(){
-		JdbcRewardRepository repository = new JdbcRewardRepository(dataSource, jdbcTemplate());
+		JdbcRewardRepository repository = new JdbcRewardRepository(jdbcTemplate());
 		return repository;
 	}
 	
