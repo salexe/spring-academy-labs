@@ -1,30 +1,32 @@
 package rewards.internal.reward;
 
-import common.datetime.SimpleDate;
-import common.money.MonetaryAmount;
-import common.money.Percentage;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+
+import common.datetime.SimpleDate;
+import common.money.MonetaryAmount;
+import common.money.Percentage;
 import rewards.AccountContribution;
 import rewards.Dining;
 import rewards.RewardConfirmation;
 import rewards.internal.account.Account;
 
-import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 /**
  * Tests the JDBC reward repository with a test data source to verify
  * data access and relational-to-object mapping behavior works as expected.
- *
- * TODO-00: In this lab, you are going to exercise the following:
+ * <p/>
+ * dTODO-00: In this lab, you are going to exercise the following:
  * - Refactoring cumbersome low-level JDBC code to leverage Spring's JdbcTemplate
  * - Using various query methods of JdbcTemplate for retrieving data
  * - Implementing callbacks for converting retrieved data into domain object
@@ -42,7 +44,7 @@ public class JdbcRewardRepositoryTests {
 	@BeforeEach
 	public void setUp() throws Exception {
 		dataSource = createTestDataSource();
-		repository = new JdbcRewardRepository(dataSource);
+		repository = new JdbcRewardRepository(dataSource, jdbcTemplate);
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
@@ -66,7 +68,7 @@ public class JdbcRewardRepositoryTests {
 	private void verifyRewardInserted(RewardConfirmation confirmation, Dining dining) throws SQLException {
 		assertEquals(1, getRewardCount());
 
-		//	TODO-02: Use JdbcTemplate to query for a map of all column values
+		//	dTODO-02: Use JdbcTemplate to query for a map of all column values
 		//	of a row in the T_REWARD table based on the confirmationNumber.
 		//  - Use "SELECT * FROM T_REWARD WHERE CONFIRMATION_NUMBER = ?" as SQL statement
 		//	- After making the changes, execute this test class to verify
@@ -75,7 +77,8 @@ public class JdbcRewardRepositoryTests {
 		//    the build.gradle file.)
 		//
 		
-		Map<String, Object> values = null;
+		Map<String, Object> values =  jdbcTemplate.queryForMap("SELECT * FROM T_REWARD WHERE CONFIRMATION_NUMBER = ?", confirmation.getConfirmationNumber());
+//		Map<String, Object> values = null;
 		verifyInsertedValues(confirmation, dining, values);
 	}
 
@@ -90,9 +93,10 @@ public class JdbcRewardRepositoryTests {
 	}
 
 	private int getRewardCount() throws SQLException {
-		// TODO-01: Use JdbcTemplate to query for the number of rows in the T_REWARD table
+		// dTODO-01: Use JdbcTemplate to query for the number of rows in the T_REWARD table
 		// - Use "SELECT count(*) FROM T_REWARD" as SQL statement
-		return -1;
+		final Integer count = jdbcTemplate.queryForObject("SELECT count(*) FROM T_REWARD", Integer.class);
+		return count == null ? -1 : count;
 	}
 
 	private DataSource createTestDataSource() {

@@ -1,12 +1,18 @@
 package rewards.internal.reward;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import common.datetime.SimpleDate;
 import rewards.AccountContribution;
 import rewards.Dining;
 import rewards.RewardConfirmation;
-
-import javax.sql.DataSource;
-import java.sql.*;
 
 /**
  * JDBC implementation of a reward repository that records the result
@@ -37,9 +43,12 @@ import java.sql.*;
 public class JdbcRewardRepository implements RewardRepository {
 
 	private DataSource dataSource;
+	
+	private JdbcTemplate jdbcTemplate;
 
-	public JdbcRewardRepository(DataSource dataSource) {
+	public JdbcRewardRepository(DataSource dataSource, JdbcTemplate jdbcTemplate) {
 		this.dataSource = dataSource;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public RewardConfirmation confirmReward(AccountContribution contribution, Dining dining) {
@@ -69,14 +78,16 @@ public class JdbcRewardRepository implements RewardRepository {
 		String sql = "select next value for S_REWARD_CONFIRMATION_NUMBER from DUAL_REWARD_CONFIRMATION_NUMBER";
 		String nextValue;
 		
-		try (Connection conn = dataSource.getConnection(); 
-			 PreparedStatement ps = conn.prepareStatement(sql);
-			 ResultSet rs = ps.executeQuery()) {
-			rs.next();
-			nextValue = rs.getString(1);
-		} catch (SQLException e) {
-			throw new RuntimeException("SQL exception getting next confirmation number", e);
-		}
+//		try (Connection conn = dataSource.getConnection(); 
+//			 PreparedStatement ps = conn.prepareStatement(sql);
+//			 ResultSet rs = ps.executeQuery()) {
+//			rs.next();
+//			nextValue = rs.getString(1);
+//		} catch (SQLException e) {
+//			throw new RuntimeException("SQL exception getting next confirmation number", e);
+//		}
+		
+		nextValue = jdbcTemplate.queryForObject("select next value for S_REWARD_CONFIRMATION_NUMBER from DUAL_REWARD_CONFIRMATION_NUMBER", String.class);
 		
 		return nextValue;
 	}
