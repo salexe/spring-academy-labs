@@ -1,9 +1,6 @@
 package rewards.internal.reward;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
@@ -26,7 +23,7 @@ import rewards.RewardConfirmation;
 // - Refactor JdbcRewardRepositoryTests accordingly
 // - Run JdbcRewardRepositoryTests and verity it passes
 
-// TODO-03: Refactor the cumbersome low-level JDBC code in JdbcRewardRepository with JdbcTemplate.
+// dTODO-03: Refactor the cumbersome low-level JDBC code in JdbcRewardRepository with JdbcTemplate.
 // - Add a field of type JdbcTemplate.
 // - Refactor the code in the constructor to instantiate JdbcTemplate
 //   object from the given DataSource object.
@@ -56,20 +53,26 @@ public class JdbcRewardRepository implements RewardRepository {
 		String confirmationNumber = nextConfirmationNumber();
 
 		// Update the T_REWARD table with the new Reward
-		try (Connection conn = dataSource.getConnection();
-			 PreparedStatement ps = conn.prepareStatement(sql)) {
-			
-			ps.setString(1, confirmationNumber);
-			ps.setBigDecimal(2, contribution.getAmount().asBigDecimal());
-			ps.setDate(3, new Date(SimpleDate.today().inMilliseconds()));
-			ps.setString(4, contribution.getAccountNumber());
-			ps.setString(5, dining.getMerchantNumber());
-			ps.setDate(6, new Date(dining.getDate().inMilliseconds()));
-			ps.setBigDecimal(7, dining.getAmount().asBigDecimal());
-			ps.execute();
-		} catch (SQLException e) {
-			throw new RuntimeException("SQL exception occurred inserting reward record", e);
-		}
+//		try (Connection conn = dataSource.getConnection();
+//			 PreparedStatement ps = conn.prepareStatement(sql)) {
+//			
+//			ps.setString(1, confirmationNumber);
+//			ps.setBigDecimal(2, contribution.getAmount().asBigDecimal());
+//			ps.setDate(3, new Date(SimpleDate.today().inMilliseconds()));
+//			ps.setString(4, contribution.getAccountNumber());
+//			ps.setString(5, dining.getMerchantNumber());
+//			ps.setDate(6, new Date(dining.getDate().inMilliseconds()));
+//			ps.setBigDecimal(7, dining.getAmount().asBigDecimal());
+//			ps.execute();
+//		} catch (SQLException e) {
+//			throw new RuntimeException("SQL exception occurred inserting reward record", e);
+//		}
+		
+		jdbcTemplate.update(sql,
+				// 1 2 3
+				confirmationNumber, contribution.getAmount().asBigDecimal(), new Date(SimpleDate.today().inMilliseconds())
+				// 4 5 6 7
+				, contribution.getAccountNumber(), dining.getMerchantNumber(), new Date(dining.getDate().inMilliseconds()), dining.getAmount().asBigDecimal());
 		
 		return new RewardConfirmation(confirmationNumber, contribution);
 	}
@@ -87,7 +90,7 @@ public class JdbcRewardRepository implements RewardRepository {
 //			throw new RuntimeException("SQL exception getting next confirmation number", e);
 //		}
 		
-		nextValue = jdbcTemplate.queryForObject("select next value for S_REWARD_CONFIRMATION_NUMBER from DUAL_REWARD_CONFIRMATION_NUMBER", String.class);
+		nextValue = jdbcTemplate.queryForObject(sql, String.class);
 		
 		return nextValue;
 	}

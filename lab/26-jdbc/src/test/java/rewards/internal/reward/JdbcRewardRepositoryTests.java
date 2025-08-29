@@ -44,8 +44,8 @@ public class JdbcRewardRepositoryTests {
 	@BeforeEach
 	public void setUp() throws Exception {
 		dataSource = createTestDataSource();
-		repository = new JdbcRewardRepository(dataSource, jdbcTemplate);
 		jdbcTemplate = new JdbcTemplate(dataSource);
+		repository = new JdbcRewardRepository(dataSource, jdbcTemplate);
 	}
 
 	@Test
