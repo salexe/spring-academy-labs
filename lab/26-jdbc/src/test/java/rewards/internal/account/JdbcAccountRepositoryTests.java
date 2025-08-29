@@ -1,18 +1,19 @@
 package rewards.internal.account;
 
-import common.money.MonetaryAmount;
-import common.money.Percentage;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import common.money.MonetaryAmount;
+import common.money.Percentage;
 
 /**
  * Tests the JDBC account repository with a test data source to verify data access and relational-to-object mapping
@@ -20,14 +21,18 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class JdbcAccountRepositoryTests {
 
-	private JdbcAccountRepository repository;
+    private JdbcAccountRepository repository;
 
-	private DataSource dataSource;
+	// TODO-11 d Eliminate this field. If it's still needed, make the needed modifications so that a `org.springframework.jdbc.core.JdbcTemplate` is used directly instead.
+	// private DataSource dataSource;
+	
+	private JdbcTemplate jdbcTemplate;
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		dataSource = createTestDataSource();
-		repository = new JdbcAccountRepository(dataSource);
+        DataSource dataSource = createTestDataSource();
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        repository = new JdbcAccountRepository(jdbcTemplate);
 	}
 
 	@Test
@@ -59,31 +64,20 @@ public class JdbcAccountRepositoryTests {
 	}
 
 	@Test
-	public void testUpdateBeneficiaries() throws SQLException {
+    public void testUpdateBeneficiaries() {
 		Account account = repository.findByCreditCard("1234123412341234");
 		account.makeContribution(MonetaryAmount.valueOf("8.00"));
 		repository.updateBeneficiaries(account);
 		verifyBeneficiaryTableUpdated();
 	}
 
-	private void verifyBeneficiaryTableUpdated() throws SQLException {
-		String sql = "select SAVINGS from T_ACCOUNT_BENEFICIARY where NAME = ? and ACCOUNT_ID = ?";
-		PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql);
-
-		// assert Annabelle has $4.00 savings now
-		stmt.setString(1, "Annabelle");
-		stmt.setLong(2, 0L);
-		ResultSet rs = stmt.executeQuery();
-		rs.next();
-		assertEquals(MonetaryAmount.valueOf("4.00"), MonetaryAmount.valueOf(rs.getString(1)));
-
-		// assert Corgan has $4.00 savings now
-		stmt.setString(1, "Corgan");
-		stmt.setLong(2, 0L);
-		rs = stmt.executeQuery();
-		rs.next();
-		assertEquals(MonetaryAmount.valueOf("4.00"), MonetaryAmount.valueOf(rs.getString(1)));
-	}
+        private void verifyBeneficiaryTableUpdated() {
+                String sql = "select SAVINGS from T_ACCOUNT_BENEFICIARY where NAME = ? and ACCOUNT_ID = ?";
+                assertEquals(MonetaryAmount.valueOf("4.00"), MonetaryAmount
+                                .valueOf(jdbcTemplate.queryForObject(sql, String.class, "Annabelle", 0L)));
+                assertEquals(MonetaryAmount.valueOf("4.00"), MonetaryAmount
+                                .valueOf(jdbcTemplate.queryForObject(sql, String.class, "Corgan", 0L)));
+        }
 
 	private DataSource createTestDataSource() {
 		return new EmbeddedDatabaseBuilder()
