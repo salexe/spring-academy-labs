@@ -22,8 +22,10 @@ public class RewardsConfig {
 	@Autowired
 	DataSource dataSource;
 	
-	@Autowired
-	JdbcTemplate jdbcTemplate;
+    @Bean
+    public JdbcTemplate jdbcTemplate() {
+        return new JdbcTemplate(dataSource);
+    }
 		
 	@Bean
 	public RewardNetwork rewardNetwork(){
@@ -35,19 +37,19 @@ public class RewardsConfig {
 	
 	@Bean
 	public AccountRepository accountRepository(){
-		JdbcAccountRepository repository = new JdbcAccountRepository(dataSource, jdbcTemplate);
+		JdbcAccountRepository repository = new JdbcAccountRepository(dataSource, jdbcTemplate());
 		return repository;
 	}
 	
 	@Bean
 	public RestaurantRepository restaurantRepository(){
-		JdbcRestaurantRepository repository = new JdbcRestaurantRepository(dataSource, jdbcTemplate);
+		JdbcRestaurantRepository repository = new JdbcRestaurantRepository(dataSource, jdbcTemplate());
 		return repository;
 	}
 	
 	@Bean
 	public RewardRepository rewardRepository(){
-		JdbcRewardRepository repository = new JdbcRewardRepository(dataSource, jdbcTemplate);
+		JdbcRewardRepository repository = new JdbcRewardRepository(dataSource, jdbcTemplate());
 		return repository;
 	}
 	
