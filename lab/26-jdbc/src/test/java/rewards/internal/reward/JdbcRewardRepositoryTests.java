@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -35,21 +34,19 @@ import rewards.internal.account.Account;
  */
 public class JdbcRewardRepositoryTests {
 
-	private JdbcRewardRepository repository;
+        private JdbcRewardRepository repository;
 
-	private DataSource dataSource;
-
-	private JdbcTemplate jdbcTemplate;
+        private JdbcTemplate jdbcTemplate;
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		dataSource = createTestDataSource();
-		jdbcTemplate = new JdbcTemplate(dataSource);
-		repository = new JdbcRewardRepository(jdbcTemplate);
+                DataSource dataSource = createTestDataSource();
+                jdbcTemplate = new JdbcTemplate(dataSource);
+                repository = new JdbcRewardRepository(jdbcTemplate);
 	}
 
-	@Test
-	public void testCreateReward() throws SQLException {
+        @Test
+        public void testCreateReward() {
 		Dining dining = Dining.createDining("100.00", "1234123412341234", "0123456789");
 
 		Account account = new Account("1", "Keith and Keri Donald");
@@ -65,7 +62,7 @@ public class JdbcRewardRepositoryTests {
 		verifyRewardInserted(confirmation, dining);
 	}
 
-	private void verifyRewardInserted(RewardConfirmation confirmation, Dining dining) throws SQLException {
+        private void verifyRewardInserted(RewardConfirmation confirmation, Dining dining) {
 		assertEquals(1, getRewardCount());
 
 		//	dTODO-02: Use JdbcTemplate to query for a map of all column values
@@ -92,7 +89,7 @@ public class JdbcRewardRepositoryTests {
 		assertEquals(SimpleDate.today().asDate(), values.get("DINING_DATE"));
 	}
 
-	private int getRewardCount() throws SQLException {
+        private int getRewardCount() {
 		// dTODO-01: Use JdbcTemplate to query for the number of rows in the T_REWARD table
 		// - Use "SELECT count(*) FROM T_REWARD" as SQL statement
 		final Integer count = jdbcTemplate.queryForObject("SELECT count(*) FROM T_REWARD", Integer.class);

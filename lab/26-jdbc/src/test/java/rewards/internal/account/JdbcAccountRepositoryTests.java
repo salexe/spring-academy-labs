@@ -4,10 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,17 +21,15 @@ import common.money.Percentage;
  */
 public class JdbcAccountRepositoryTests {
 
-	private JdbcAccountRepository repository;
+    private JdbcAccountRepository repository;
 
-	private DataSource dataSource;
-	
-	private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		dataSource = createTestDataSource();
-		jdbcTemplate = new JdbcTemplate(dataSource);
-		repository = new JdbcAccountRepository(jdbcTemplate);
+        DataSource dataSource = createTestDataSource();
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        repository = new JdbcAccountRepository(jdbcTemplate);
 	}
 
 	@Test
@@ -67,31 +61,20 @@ public class JdbcAccountRepositoryTests {
 	}
 
 	@Test
-	public void testUpdateBeneficiaries() throws SQLException {
+    public void testUpdateBeneficiaries() {
 		Account account = repository.findByCreditCard("1234123412341234");
 		account.makeContribution(MonetaryAmount.valueOf("8.00"));
 		repository.updateBeneficiaries(account);
 		verifyBeneficiaryTableUpdated();
 	}
 
-	private void verifyBeneficiaryTableUpdated() throws SQLException {
-		String sql = "select SAVINGS from T_ACCOUNT_BENEFICIARY where NAME = ? and ACCOUNT_ID = ?";
-		PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql);
-
-		// assert Annabelle has $4.00 savings now
-		stmt.setString(1, "Annabelle");
-		stmt.setLong(2, 0L);
-		ResultSet rs = stmt.executeQuery();
-		rs.next();
-		assertEquals(MonetaryAmount.valueOf("4.00"), MonetaryAmount.valueOf(rs.getString(1)));
-
-		// assert Corgan has $4.00 savings now
-		stmt.setString(1, "Corgan");
-		stmt.setLong(2, 0L);
-		rs = stmt.executeQuery();
-		rs.next();
-		assertEquals(MonetaryAmount.valueOf("4.00"), MonetaryAmount.valueOf(rs.getString(1)));
-	}
+        private void verifyBeneficiaryTableUpdated() {
+                String sql = "select SAVINGS from T_ACCOUNT_BENEFICIARY where NAME = ? and ACCOUNT_ID = ?";
+                assertEquals(MonetaryAmount.valueOf("4.00"), MonetaryAmount
+                                .valueOf(jdbcTemplate.queryForObject(sql, String.class, "Annabelle", 0L)));
+                assertEquals(MonetaryAmount.valueOf("4.00"), MonetaryAmount
+                                .valueOf(jdbcTemplate.queryForObject(sql, String.class, "Corgan", 0L)));
+        }
 
 	private DataSource createTestDataSource() {
 		return new EmbeddedDatabaseBuilder()
