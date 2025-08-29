@@ -23,7 +23,10 @@ public class JdbcAccountRepositoryTests {
 
     private JdbcAccountRepository repository;
 
-    private JdbcTemplate jdbcTemplate;
+	// TODO-11 d Eliminate this field. If it's still needed, make the needed modifications so that a `org.springframework.jdbc.core.JdbcTemplate` is used directly instead.
+	// private DataSource dataSource;
+	
+	private JdbcTemplate jdbcTemplate;
 
 	@BeforeEach
 	public void setUp() throws Exception {
