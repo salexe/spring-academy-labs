@@ -14,7 +14,7 @@ import rewards.RewardConfirmation;
  * of a reward transaction by inserting a reward confirmation record.
  */
 
-// TODO-08 (Optional) : Inject JdbcTemplate directly to this repository class
+// TODO-08 d? (Optional) : Inject JdbcTemplate directly to this repository class
 // - Refactor the constructor to get the JdbcTemplate injected directly
 //   (instead of DataSource getting injected)
 // - Refactor RewardsConfig accordingly
