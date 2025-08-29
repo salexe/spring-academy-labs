@@ -1,14 +1,17 @@
 package rewards.internal.account;
 
-import common.money.MonetaryAmount;
-import common.money.Percentage;
-import org.springframework.dao.EmptyResultDataAccessException;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import common.money.MonetaryAmount;
+import common.money.Percentage;
 
 /**
  * Loads accounts from a data source using the JDBC API.
@@ -28,9 +31,12 @@ import java.sql.SQLException;
 public class JdbcAccountRepository implements AccountRepository {
 
 	private DataSource dataSource;
+	
+	private JdbcTemplate jdbcTemplate;
 
-	public JdbcAccountRepository(DataSource dataSource) {
+	public JdbcAccountRepository(DataSource dataSource, JdbcTemplate jdbcTemplate) {
 		this.dataSource = dataSource;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	// TODO-07 (Optional): Refactor this method using JdbcTemplate and ResultSetExtractor

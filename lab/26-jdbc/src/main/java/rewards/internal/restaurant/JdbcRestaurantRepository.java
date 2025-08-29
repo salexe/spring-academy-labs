@@ -23,7 +23,7 @@ import rewards.internal.account.Account;
 // - Refactor JdbcRestaurantRepositoryTests accordingly
 // - Run JdbcRestaurantRepositoryTests and verity it passes
 
-// TODO-04: Refactor the cumbersome low-level JDBC code to use JdbcTemplate.
+// dTODO-04: Refactor the cumbersome low-level JDBC code to use JdbcTemplate.
 // - Run JdbcRestaurantRepositoryTests and verity it passes
 // - Add a field of type JdbcTemplate
 // - Refactor the code in the constructor to instantiate JdbcTemplate object
@@ -63,7 +63,7 @@ public class JdbcRestaurantRepository implements RestaurantRepository {
 //			throw new RuntimeException("SQL exception occurred finding by merchant number", e);
 //		}
 
-		jdbcTemplate.queryForObject(sql, (rs, rowNum) -> mapRestaurant(rs), merchantNumber);		
+		restaurant = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> mapRestaurant(rs), merchantNumber);		
 		return restaurant;
 	}
 

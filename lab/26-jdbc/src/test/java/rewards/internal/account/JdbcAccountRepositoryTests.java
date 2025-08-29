@@ -1,18 +1,23 @@
 package rewards.internal.account;
 
-import common.money.MonetaryAmount;
-import common.money.Percentage;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import javax.sql.DataSource;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+
+import common.money.MonetaryAmount;
+import common.money.Percentage;
 
 /**
  * Tests the JDBC account repository with a test data source to verify data access and relational-to-object mapping
@@ -23,11 +28,14 @@ public class JdbcAccountRepositoryTests {
 	private JdbcAccountRepository repository;
 
 	private DataSource dataSource;
+	
+	private JdbcTemplate jdbcTemplate;
 
 	@BeforeEach
 	public void setUp() throws Exception {
 		dataSource = createTestDataSource();
-		repository = new JdbcAccountRepository(dataSource);
+		jdbcTemplate = new JdbcTemplate(dataSource);
+		repository = new JdbcAccountRepository(dataSource, jdbcTemplate);
 	}
 
 	@Test
