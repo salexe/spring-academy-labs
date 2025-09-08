@@ -1,5 +1,9 @@
 package rewards;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +14,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import javax.sql.DataSource;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * A system test that demonstrates how propagation settings affect transactional
  * execution.
  */
 
-// TODO-05: Review and run the testPropagation() method below.
+// TODO-05 d? : Review and run the testPropagation() method below.
 //
 //  It uses a transaction-manager to implement transactions manually
 //  and runs rewardAccountFor() within a transaction then performs a manual rollback.
@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 //  - Run this test, initially it will FAIL because the data has been rolled back.
 //    We are going to address this in the subsequent steps.
 
-// TODO-07: Re-run this test, it should now pass.
+// TODO-07 d? : Re-run this test, it should now pass.
 // - Think about why this test passes now.
 
 @ExtendWith(SpringExtension.class)

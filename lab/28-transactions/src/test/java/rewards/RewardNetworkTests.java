@@ -1,8 +1,10 @@
 package rewards;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import common.money.MonetaryAmount;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,17 +14,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.sql.DataSource;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import common.money.MonetaryAmount;
 
 /**
  * A system test that verifies the components of the RewardNetwork application
  * work together to reward for dining successfully. Uses Spring to bootstrap the
  * application for use in a test environment.
  *
- * TODO-04: Save all work, run this RewardNetworkTests below.  It should pass.
+ * TODO-04 d? : Save all work, run this RewardNetworkTests below.  It should pass.
  *  (If you are using Gradle, remove all exclude statements
  *  from the build.gradle file before running the test.)
  * - Notice that we have enabled DEBUG logging in setup() below.
